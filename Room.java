@@ -13,15 +13,15 @@ import java.util.Iterator;
  * connected to other rooms via exits.  For each existing exit, the room 
  * stores a reference to the neighboring room.
  * 
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author  Eric Brown
+ * @version 10-22-2022
  */
 
 public class Room 
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
-    private HashSet<Item> items;
+    private Item item;
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
@@ -32,7 +32,6 @@ public class Room
     {
         this.description = description;
         exits = new HashMap<>();
-        items = new HashSet<>();
     }
 
     /**
@@ -44,7 +43,38 @@ public class Room
     {
         exits.put(direction, neighbor);
     }
-
+    
+    /**
+     * Populate the room with an item. 
+     * Exercise 8.20 - 8.21
+     * @param description The description of the item.
+     * @param weight The weight value of the item.
+     */
+    public void setItem(String description, int weight)
+    {
+        item = new Item(description, weight);
+    }
+    
+    /**
+     * Return the item that the room contains, if it contains one.
+     * Null otherwise. 
+     * Exercise 8.20 - 8.21
+     * @return The room's item value, if applicalble.
+     */
+    public Item getItem()
+    {
+        return item;
+    }
+    
+    /**
+     * Remove an item from the room.
+     * Exercise 8.20 - 8.21
+     */
+    public void removeItem()
+    {
+        item = null;
+    }
+        
     /**
      * @return The short description of the room
      * (the one that was defined in the constructor).
@@ -55,14 +85,21 @@ public class Room
     }
 
     /**
-     * Return a description of the room in the form:
+     * Exercise 8.20 - 8.21
+     * Return a description of the room in the form:     
      *     You are in the kitchen.
      *     Exits: north west
      * @return A long description of this room
      */
     public String getLongDescription()
-    {
-        return "You are " + description + ".\n" + getExitString();
+    {   
+        String baseString = "You are " + description + ".\n";
+        String itemInfo = ""; // Exercise 8.20 - 8.21
+        if (item != null){
+            itemInfo = "You see " +  item.getDescription().toUpperCase() 
+            +".\n";
+        }
+        return "You are " + description + ".\n" + itemInfo +  getExitString();
     }
 
     /**
