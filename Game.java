@@ -12,7 +12,7 @@
  *  executes the commands that the parser returns.
  * 
  * @author  Eric Brown
- * @version 10-21-2022
+ * @version 10-22-2022
  */
 
 public class Game 
@@ -47,7 +47,10 @@ public class Game
         outside.setExit("east", theater);
         outside.setExit("south", lab);
         outside.setExit("west", pub);
-
+        outside.addItem("an ornate key", 1);
+        outside.addItem("a set of mall ninja shuriken", 2);
+        outside.addItem("a cool hat", 1);
+        
         theater.setExit("west", outside);
 
         pub.setExit("east", outside);

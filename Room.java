@@ -1,6 +1,6 @@
 import java.util.Set;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -21,10 +21,10 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
-    private Item item;
+    private ArrayList<Item> items;
     /**
      * Create a room described "description". Initially, it has
-     * no exits. "description" is something like "a kitchen" or
+     * no exits or items. "description" is something like "a kitchen" or
      * "an open court yard".
      * @param description The room's description.
      */
@@ -32,6 +32,7 @@ public class Room
     {
         this.description = description;
         exits = new HashMap<>();
+        items = new ArrayList<Item>();
     }
 
     /**
@@ -45,36 +46,27 @@ public class Room
     }
     
     /**
-     * Populate the room with an item. 
-     * Exercise 8.20 - 8.21
+     * Populate the room with an item. A description is something like
+     * "a cursed puzzle box" or "an arcane scroll".
+     * Exercise 8.20 - 8.22
      * @param description The description of the item.
      * @param weight The weight value of the item.
      */
-    public void setItem(String description, int weight)
+    public void addItem(String description, int weight)
     {
-        item = new Item(description, weight);
+        items.add(new Item(description, weight));
     }
     
     /**
-     * Return the item that the room contains, if it contains one.
-     * Null otherwise. 
-     * Exercise 8.20 - 8.21
-     * @return The room's item value, if applicalble.
+     * Return the collection of items that the room contains.
+     * Exercise 8.20 - 8.22
+     * @return An ArrayList containing all of the items present in the room.
      */
-    public Item getItem()
+    public ArrayList<Item> getItems()
     {
-        return item;
+        return items;
     }
     
-    /**
-     * Remove an item from the room.
-     * Exercise 8.20 - 8.21
-     */
-    public void removeItem()
-    {
-        item = null;
-    }
-        
     /**
      * @return The short description of the room
      * (the one that was defined in the constructor).
@@ -85,9 +77,10 @@ public class Room
     }
 
     /**
-     * Exercise 8.20 - 8.21
-     * Return a description of the room in the form:     
+     * Exercise 8.20 - 8.22
+     * Return a formatted description of the room in the form:     
      *     You are in the kitchen.
+     *     You see a 
      *     Exits: north west
      * @return A long description of this room
      */
@@ -95,9 +88,24 @@ public class Room
     {   
         String baseString = "You are " + description + ".\n";
         String itemInfo = ""; // Exercise 8.20 - 8.21
-        if (item != null){
-            itemInfo = "You see " +  item.getDescription().toUpperCase() 
-            +".\n";
+        if (items.size() != 0){
+            itemInfo += "You see ";
+            
+            for (int i = 0; i < items.size(); i++){
+                if (i == items.size() - 1){
+                    itemInfo += "and " 
+                    + items.get(i).getDescription().toUpperCase() 
+                    + ".\n";
+                 
+                }
+                else {
+                    itemInfo += items.get(i).getDescription().toUpperCase();
+                    if (items.size() != 2) { 
+                        itemInfo +=",";
+                    }
+                    itemInfo += " ";
+                }
+            }
         }
         return "You are " + description + ".\n" + itemInfo +  getExitString();
     }
