@@ -33,34 +33,95 @@ public class Game
      * Create all the rooms and link their exits together.
      */
     private void createRooms()
-    {
-        Room outside, theater, pub, lab, office;
-      
+    {   
+        Room downtown,hotelSquare,cityPark,aptComplex,trainStation,theLofts,
+        francisStreet,church,hospital,collegeBlvd,corpPark,cemetery,
+        industrialAve,residentialArea,schoolBuildings,home;
+        
         // create the rooms
-        outside = new Room("outside the main entrance of the university");
-        theater = new Room("in a lecture theater");
-        pub = new Room("in the campus pub");
-        lab = new Room("in a computing lab");
-        office = new Room("in the computing admin office");
+        downtown = new Room("on Main Street, outside the coffee shop at which you work");
+        hotelSquare = new Room("in front of a large, brightly-lit, expensive-looking hotel");
+        cityPark = new Room("at the city park. A large sign on the fence says \"Open dusk-dawn\"");
+        aptComplex = new Room("in a dark, enclosed apartment complex."
+        +"\nYou get the distinct sense that you're tresspassing." 
+        + "\nThe only way out is the way you came");
+        trainStation = new Room("at the city's train station. A covered bench provides temporary shelter from the rain");
+        theLofts = new Room("in front of a trendy apartment building." 
+        + "\nYou don't know what kind of person could afford to live here, but it sure isn't you");
+        francisStreet = new Room("a well-lit street lined with various stores and restaurants."
+        +"\nMost of them are closed this late");
+        church = new Room("in front of a large, old church. Immediately to its north is a large cemetery");
+        hospital = new Room("in front of the local hospital. Visiting hours are long over, and most of the lights are dimmed");
+        collegeBlvd = new Room("on the corner of College Boulevard."
+        + "\nIt's much less crowded than usual with the rain," 
+        + "\nbut there are still a few brave souls bar-hopping and grabbing takeout");
+        corpPark = new Room("in front of a large office complex. The lights are on, but the parking lot is empty");
+        cemetery = new Room("in the cemetery next to the church. They leave the gates open here all night."+
+        "\nIn better weather you might stop to appreciate some cool old tombstones");
+        industrialAve = new Room("near some run-down warehouses and industrial buildings."
+        + "\nSome of them look like they'll collapse any second now");
+        residentialArea = new Room("in a quiet residential area." 
+        + "\nMost of the streetlights don't work here. "
+        +"\nYou're slightly creeped out");
+        schoolBuildings = new Room("near some of the local college's academic buildings");
+        home = new Room("in front of your apartment building");
         
         // initialise room exits
-        outside.setExit("east", theater);
-        outside.setExit("south", lab);
-        outside.setExit("west", pub);
-        outside.addItem("an ornate key", 1);
-        outside.addItem("a set of mall ninja shuriken", 2);
-        outside.addItem("a cool hat", 1);
+        downtown.setExit("east", trainStation);
+        downtown.setExit("west", hotelSquare);
+        downtown.addItem("an ornate key", 1);
+        downtown.addItem("a set of mall ninja shuriken", 2);
+        downtown.addItem("a cool hat", 1);
         
-        theater.setExit("west", outside);
+        hotelSquare.setExit("north",church);
+        hotelSquare.setExit("east",downtown);
+        hotelSquare.setExit("west",cityPark);
+        
+        cityPark.setExit("east",hotelSquare);
+        cityPark.setExit("west",aptComplex);
+        cityPark.setExit("north",francisStreet);
+        
+        aptComplex.setExit("east",cityPark);
+        
+        francisStreet.setExit("south",cityPark);
+        francisStreet.setExit("east", church);
 
-        pub.setExit("east", outside);
-
-        lab.setExit("north", outside);
-        lab.setExit("east", office);
-
-        office.setExit("west", lab);
-
-        currentRoom = outside;  // start game outside
+        church.setExit("north",cemetery);
+        church.setExit("east",hospital);
+        church.setExit("south",hotelSquare);
+        church.setExit("west", francisStreet);
+        
+        cemetery.setExit("north",industrialAve);
+        cemetery.setExit("south",church);
+        
+        industrialAve.setExit("east", residentialArea);
+        industrialAve.setExit("south",cemetery);
+        
+        residentialArea.setExit("north",home);
+        residentialArea.setExit("west",industrialAve);
+        residentialArea.setExit("east",schoolBuildings);
+        
+        schoolBuildings.setExit("west",residentialArea);
+        schoolBuildings.setExit("south",corpPark);
+        
+        corpPark.setExit("north",schoolBuildings);
+        corpPark.setExit("south",theLofts);
+        corpPark.setExit("west",collegeBlvd);
+        
+        collegeBlvd.setExit("north",residentialArea);
+        collegeBlvd.setExit("east",corpPark);
+        collegeBlvd.setExit("south", trainStation);
+        collegeBlvd.setExit("west", hospital);
+        
+        hospital.setExit("east", collegeBlvd);
+        hospital.setExit("west",church);
+        
+        trainStation.setExit("north",collegeBlvd);
+        trainStation.setExit("west",downtown);
+        
+        theLofts.setExit("north",corpPark);
+        
+        currentRoom = downtown;  // start game downtown
     }
 
     /**
@@ -87,8 +148,13 @@ public class Game
     private void printWelcome()
     {
         System.out.println();
-        System.out.println("Welcome to the World of Zuul!");
-        System.out.println("World of Zuul is a new, incredibly boring adventure game.");
+        System.out.println("You are a barista at a chain coffee shop in a small city.");
+        System.out.println("Your workplace stays open inexplicably late. You're just closing up now.");
+        System.out.println("It's a warm, rainy night in the early fall. There's no one around.");
+        System.out.println("You're not looking forward to the walk home.");
+        System.out.println("The labyrinthine streets seem to rearrange themselves when no one's around to see.\n");
+        System.out.println("You get lost every time.");
+        System.out.println("You also forgot your umbrella.");        
         System.out.println("Type '" + CommandWord.HELP + "' if you need help.");
         System.out.println();
         System.out.println(currentRoom.getLongDescription());
@@ -142,8 +208,7 @@ public class Game
      */
     private void printHelp() 
     {
-        System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
+        System.out.println("You just want to get home.");
         System.out.println();
         System.out.println("Your command words are:");
         parser.showCommands();
