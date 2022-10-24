@@ -9,7 +9,7 @@
  * 
  * Exercise 3.18
  * @author Eric Brown
- * @version 10-21-2022
+ * @version 10-23-2022
  */
 public class Item
 {

@@ -1,8 +1,9 @@
+import java.util.ArrayList;
+import java.util.Random;
 /**
- *  This class is the main class of the "World of Zuul" application. 
- *  "World of Zuul" is a very simple, text based adventure game.  Users 
- *  can walk around some scenery. That's all. It should really be extended 
- *  to make it more interesting!
+ *  This class is the main class of the "A Weird Walk Home" application. 
+ *  "A Weird Walk Home" is a very simple, text based adventure game. Users 
+ *  can walk around some scenery, talk to some strange characters, and 
  * 
  *  To play this game, create an instance of this class and call the "play"
  *  method.
@@ -12,21 +13,35 @@
  *  executes the commands that the parser returns.
  * 
  * @author  Eric Brown
- * @version 10-22-2022
+ * @version 10-23-2022
  */
 
 public class Game 
-{
+{   
+    /**
+     * The main method for the Game class. Starts a new game.
+     */
+    public static void main(String[] args)
+    {
+        Game game = new Game();
+        game.play();
+    }
+    
     private Parser parser;
     private Room currentRoom;
+    private ArrayList<Room> validDestinations; // Valid locations for wandering cat NPC
+    private Random rng;
         
     /**
      * Create the game and initialise its internal map.
      */
     public Game() 
-    {
+    {   
+        validDestinations = new ArrayList<>();
+        rng = new Random();
         createRooms();
         parser = new Parser();
+
     }
 
     /**
@@ -64,7 +79,9 @@ public class Game
         + "\nMost of the streetlights don't work here. "
         +"\nYou're slightly creeped out");
         schoolBuildings = new Room("near some of the local college's academic buildings");
-        home = new Room("in front of your apartment building");
+        home = new Room("in front of your apartment building. You made it home in one piece.\n" 
+        + "You unlock the door and pass out on the couch. \n"
+        + "Thank you for playing. Please type \"quit\" to quit.");
         
         // initialise room exits
         downtown.setExit("east", trainStation);
@@ -95,13 +112,14 @@ public class Game
         francisStreet.setExit("south",cityPark);
         francisStreet.setExit("east", church);
         francisStreet.addItem("some broken glass",1);
+        validDestinations.add(francisStreet);
 
         church.setExit("north",cemetery);
         church.setExit("east",hospital);
         church.setExit("south",hotelSquare);
         church.setExit("west", francisStreet);
         church.addItem("a bowl of milk",1);
-        church.addNPC("a stray cat","Meow.");
+        validDestinations.add(church);
         
         cemetery.setExit("north",industrialAve);
         cemetery.setExit("south",church);
@@ -121,14 +139,17 @@ public class Game
         residentialArea.setExit("north",home);
         residentialArea.setExit("west",industrialAve);
         residentialArea.setExit("east",schoolBuildings);
+        validDestinations.add(residentialArea);
         
         schoolBuildings.setExit("west",residentialArea);
         schoolBuildings.setExit("south",corpPark);
+        validDestinations.add(schoolBuildings);
         
         corpPark.setExit("north",schoolBuildings);
         corpPark.setExit("south",theLofts);
         corpPark.setExit("west",collegeBlvd);
         corpPark.addItem("a trash can overflowing with discarded coffee cups.", 999);
+        validDestinations.add(corpPark);
 
         collegeBlvd.setExit("north",residentialArea);
         collegeBlvd.setExit("east",corpPark);
@@ -143,13 +164,12 @@ public class Game
         
         trainStation.setExit("north",collegeBlvd);
         trainStation.setExit("west",downtown);
+        validDestinations.add(trainStation);
         
         theLofts.setExit("north",corpPark);
         theLofts.addItem("a soggy, trampled pizza box",2);
         theLofts.addNPC("a distraught pizza delivery guy", 
         "Sorry, can't talk right now. I've got a bit of a situation to deal with here.");
-        
-        
         
         currentRoom = downtown;  // start game downtown
     }
@@ -158,7 +178,10 @@ public class Game
      *  Main play routine.  Loops until end of play.
      */
     public void play() 
-    {            
+    {   
+        int newLocationIndex = rng.nextInt(validDestinations.size());
+        Room catLocation = validDestinations.get(newLocationIndex); 
+        
         printWelcome();
 
         // Enter the main command loop.  Here we repeatedly read commands and
@@ -166,8 +189,15 @@ public class Game
                 
         boolean finished = false;
         while (! finished) {
+            newLocationIndex = rng.nextInt(validDestinations.size());
             Command command = parser.getCommand();
             finished = processCommand(command);
+            // Random NPC movement
+            catLocation.removeNPC();
+            catLocation = validDestinations.get(newLocationIndex);
+            catLocation.addNPC("a stray orange tabby cat","Meow.");
+            
+            // System.out.println("Cat location: " + catLocation.getShortDescription()); //Cat location change test
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -315,4 +345,6 @@ public class Game
             return true;  // signal that we want to quit
         }
     }
+    
+
 }

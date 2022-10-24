@@ -1,0 +1,16 @@
+Eric Brown
+
+Mandatory Features:
+	+ 8.14 Add a look command
+	
+Basic Requirement:
+	+ 8.15 Add another("eat") command
+	+ 8.16 Streamlined printing of available commands
+	
+Intermediate Requirement:
+	+ 8.20-21 Add items to the game
+	+ 8.22 Each room can hold multiple items
+	
+Advanced Requirement: 
+	+ Add NPCs
+	+ An NPC can move to random locations

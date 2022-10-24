@@ -14,7 +14,7 @@ import java.util.Iterator;
  * stores a reference to the neighboring room.
  * 
  * @author  Eric Brown
- * @version 10-22-2022
+ * @version 10-23-2022
  */
 
 public class Room 
@@ -90,6 +90,14 @@ public class Room
     }
     
     /**
+     * Remove the NPC from this location.
+     */
+    public void removeNPC()
+    {
+        npc = null;
+    }
+    
+    /**
      * @return The short description of the room
      * (the one that was defined in the constructor).
      */
@@ -108,7 +116,7 @@ public class Room
      */
     public String getLongDescription()
     {   
-        String baseString = "You are " + description + ".\n";
+        String baseString = "\nYou are " + description + ".\n";
         String itemInfo = ""; // Exercise 8.20 - 8.21
         String npcInfo = "";
         if (items.size() != 0){
