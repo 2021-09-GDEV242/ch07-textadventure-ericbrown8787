@@ -22,6 +22,8 @@ public class Room
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
     private ArrayList<Item> items;
+    private NonPlayerCharacter npc;
+    
     /**
      * Create a room described "description". Initially, it has
      * no exits or items. "description" is something like "a kitchen" or
@@ -68,6 +70,26 @@ public class Room
     }
     
     /**
+     * Populate the room with an NPC.
+     * @param name The name of the character.
+     * @param dialogue The character's dialogue.
+     */
+    public void addNPC(String name, String dialogue)
+    {
+        npc = new NonPlayerCharacter(name,dialogue);
+    }
+    
+    
+    /**
+     * Return the character that resides in the room, if any. 
+     * @return the NonPlayerCharacter that appears in the room.
+     */
+    public NonPlayerCharacter getNPC()
+    {
+        return npc;
+    }
+    
+    /**
      * @return The short description of the room
      * (the one that was defined in the constructor).
      */
@@ -88,6 +110,7 @@ public class Room
     {   
         String baseString = "You are " + description + ".\n";
         String itemInfo = ""; // Exercise 8.20 - 8.21
+        String npcInfo = "";
         if (items.size() != 0){
             itemInfo += "You see ";
             
@@ -107,7 +130,11 @@ public class Room
                 }
             }
         }
-        return "You are " + description + ".\n" + itemInfo +  getExitString();
+        
+        if (npc != null){
+            npcInfo += "\nYou see " + npc.getName() + " in the area. Maybe you should ask them for directions.";
+        }
+        return "You are " + description + ".\n" + itemInfo + npcInfo + getExitString();
     }
 
     /**
@@ -117,7 +144,7 @@ public class Room
      */
     private String getExitString()
     {
-        String returnString = "Exits:";
+        String returnString = "\nExits:";
         Set<String> keys = exits.keySet();
         for(String exit : keys) {
             returnString += " " + exit;

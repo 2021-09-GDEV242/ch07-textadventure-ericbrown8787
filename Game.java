@@ -69,33 +69,54 @@ public class Game
         // initialise room exits
         downtown.setExit("east", trainStation);
         downtown.setExit("west", hotelSquare);
-        downtown.addItem("an ornate key", 1);
-        downtown.addItem("a set of mall ninja shuriken", 2);
-        downtown.addItem("a cool hat", 1);
+        downtown.addItem("a statue of the current sitting mayor, commissioned by the man himself", 999);
+        downtown.addItem("a set of mall ninja shuriken", 1);
+        downtown.addItem("an abandoned cool hat", 1);
         
         hotelSquare.setExit("north",church);
         hotelSquare.setExit("east",downtown);
         hotelSquare.setExit("west",cityPark);
+        hotelSquare.addItem("some abandoned luggage",3);
+        hotelSquare.addNPC("a small child in an expensive suit", 
+        "Do I look like someone who knows where you live? I don't even know where I live.");
         
         cityPark.setExit("east",hotelSquare);
         cityPark.setExit("west",aptComplex);
         cityPark.setExit("north",francisStreet);
+        cityPark.addItem("a fancy refillable lighter", 1);
         
         aptComplex.setExit("east",cityPark);
+        aptComplex.addItem("an overflowing dumpster",999);
+        aptComplex.addNPC("a turkey vulture","Hey there stranger. I've never seen you around these parts before." 
+        + "\nIf I had to guess, I'd say you're about as far as you can possibly be from your house right now"
+        + "\nSo whatever direction you've been going in, you should uh...go in the opposite one.");
+        
         
         francisStreet.setExit("south",cityPark);
         francisStreet.setExit("east", church);
+        francisStreet.addItem("some broken glass",1);
 
         church.setExit("north",cemetery);
         church.setExit("east",hospital);
         church.setExit("south",hotelSquare);
         church.setExit("west", francisStreet);
+        church.addItem("a bowl of milk",1);
+        church.addNPC("a stray cat","Meow.");
         
         cemetery.setExit("north",industrialAve);
         cemetery.setExit("south",church);
+        cemetery.addItem("a shovel",3);
+        cemetery.addItem("a tattered picnic blanket",2);
+        cemetery.addNPC("a friendly skeleton", 
+        "The skeleton's vocal cords have long since turned to dust,"
+        + " but they point northwest with one outstretched finger.");
         
         industrialAve.setExit("east", residentialArea);
         industrialAve.setExit("south",cemetery);
+        industrialAve.addNPC("a shadowy figure", 
+        "You can't see their eyes, but you know they're staring right at you.\n"
+        + "A bolt of lightning illuminates the area.\n You still can't make out their face.\n"
+        + "You back away.");
         
         residentialArea.setExit("north",home);
         residentialArea.setExit("west",industrialAve);
@@ -107,19 +128,28 @@ public class Game
         corpPark.setExit("north",schoolBuildings);
         corpPark.setExit("south",theLofts);
         corpPark.setExit("west",collegeBlvd);
-        
+        corpPark.addItem("a trash can overflowing with discarded coffee cups.", 999);
+
         collegeBlvd.setExit("north",residentialArea);
         collegeBlvd.setExit("east",corpPark);
         collegeBlvd.setExit("south", trainStation);
         collegeBlvd.setExit("west", hospital);
+        collegeBlvd.addNPC("a person who is clearly three raccoons in a trenchcoat", 
+        "**Chitters enthusiastically while pointing north with three of their six paws**");
         
         hospital.setExit("east", collegeBlvd);
         hospital.setExit("west",church);
+        hospital.addNPC("an off-duty nurse", "Sorry, I don't actually live around here. I have no idea.");
         
         trainStation.setExit("north",collegeBlvd);
         trainStation.setExit("west",downtown);
         
         theLofts.setExit("north",corpPark);
+        theLofts.addItem("a soggy, trampled pizza box",2);
+        theLofts.addNPC("a distraught pizza delivery guy", 
+        "Sorry, can't talk right now. I've got a bit of a situation to deal with here.");
+        
+        
         
         currentRoom = downtown;  // start game downtown
     }
@@ -191,6 +221,10 @@ public class Game
             case EAT: // Exercise 8.15
                 eat();
                 break;
+                
+            case TALK:
+                talk();
+                break;
 
             case QUIT:
                 wantToQuit = quit(command);
@@ -255,6 +289,15 @@ public class Game
     private void eat()
     {
         System.out.println("You have eaten now, and are not hungry any more.");
+    }
+    
+    /**
+     * Print the dialogue of the current room's NPC, if applicable.
+     */
+    private void talk()
+    {
+        System.out.println("\nYou ask " + currentRoom.getNPC().getName() + " for directions.");
+        System.out.println("\n" + currentRoom.getNPC().getName() + ": " + currentRoom.getNPC().getDialogue());
     }
     
     /** 
